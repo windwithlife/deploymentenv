@@ -17,3 +17,7 @@ kubectl label namespace default istio-injection=enabled
 #kubectl label nodes node1 edgenode=true
 
 kubectl apply -f ../../k8s/sources/envoy.yaml -n istio-system
+
+
+#加入istio证书管理服务
+kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.15.0/cert-manager.yaml
