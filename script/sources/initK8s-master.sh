@@ -180,6 +180,7 @@ kubectl apply -f ./cloud-resources/k8s/resources/deployments/docker-registry.yam
 #create node join token string
 #kubeadm token create --print-join-command
 
+#kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/provider/baremetal/service-nodeport.yaml
 
 #安装Xci自身项目到K8s中去
 
