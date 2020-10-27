@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: default
+  name: emqx
+---
+apiVersion: rbac.authorization.kubernetes.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: emqx
+rules:
+- apiGroups:
+- ""
+resources:
+- endpoints 
+verbs: 
+- get
+- watch
+- list
+---
+apiVersion: rbac.authorization.kubernetes.io/v1
+kind: RoleBinding
+metadata:
+  namespace: default
+  name: emqx
+subjects:
+- kind: ServiceAccount
+  name: emqx
+  namespace: default
+roleRef:
+  kind: Role
+  name: emqx
+  apiGroup: rbac.authorization.kubernetes.io
+
+
