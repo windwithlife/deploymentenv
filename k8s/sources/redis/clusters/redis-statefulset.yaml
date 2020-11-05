@@ -86,11 +86,13 @@ metadata:
   labels:
     app: redis
 spec:
+  type: NodePort
   ports:
   - name: redis-port
     protocol: "TCP"
     port: 6379
     targetPort: 6379
+    nodePort: 30379
   selector:
     app: redis
     appCluster: redis-cluster
