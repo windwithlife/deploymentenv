@@ -249,11 +249,11 @@ metadata:
        proxy_set_header Upgrade "websocket";
        proxy_set_header Connection "Upgrade";
 spec:      
-  tls:
-  - secretName: mqserver-koudaibook-com-cert
-    hosts:
-    - mqserver.koudaibook.com
-    - mq.koudaibook.com
+  #tls:
+  #- secretName: mqserver-koudaibook-com-cert
+  #  hosts:
+  #  - mqserver.koudaibook.com
+  #  - mq.koudaibook.com
   rules: 
   - host: mqserver.koudaibook.com
     http:
@@ -271,3 +271,20 @@ spec:
         backend:
           serviceName: rabbitmq
           servicePort: 15672 
+
+  - host: mq.koudaibook.com
+    http:
+      paths:
+        #代理websocket服务
+      - path: /ws
+        backend:
+          serviceName: rabbitmq
+          servicePort: 15675
+      - path: /wss
+        backend:
+          serviceName: rabbitmq
+          servicePort: 15675
+      - path: /
+        backend:
+          serviceName: rabbitmq
+          servicePort: 15672
