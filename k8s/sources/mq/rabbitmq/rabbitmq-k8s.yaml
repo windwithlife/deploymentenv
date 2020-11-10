@@ -240,6 +240,8 @@ metadata:
   name: rabbitmq-ingress
   namespace: test-rabbitmq
   annotations:           
+    #不启用https强制跳转
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
     #ingress使用那种软件 
     kubernetes.io/ingress.class: nginx
     #配置websocket 需要的配置   
@@ -247,11 +249,11 @@ metadata:
        proxy_set_header Upgrade "websocket";
        proxy_set_header Connection "Upgrade";
 spec:      
-  #tls:
-  #- secretName: mqserver-koudaibook-com-cert
-  #  hosts:
-  #  - mqserver.koudaibook.com
-  #  - mq.koudaibook.com
+  tls:
+  - secretName: mqserver-koudaibook-com-cert
+    hosts:
+    - mqserver.koudaibook.com
+    - mq.koudaibook.com
   rules: 
   - host: mqserver.koudaibook.com
     http:
