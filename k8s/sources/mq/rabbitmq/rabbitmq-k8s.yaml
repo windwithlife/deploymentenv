@@ -247,11 +247,11 @@ metadata:
        proxy_set_header Upgrade "websocket";
        proxy_set_header Connection "Upgrade";
 spec:      
-  tls:
-  - secretName: mqserver-koudaibook-com-cert
-    hosts:
-    - mqserver.koudaibook.com
-    - mq.koudaibook.com
+  #tls:
+  #- secretName: mqserver-koudaibook-com-cert
+  #  hosts:
+  #  - mqserver.koudaibook.com
+  #  - mq.koudaibook.com
   rules: 
   - host: mqserver.koudaibook.com
     http:
