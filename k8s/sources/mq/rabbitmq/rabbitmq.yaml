@@ -223,7 +223,7 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: service-gateway
+  name: mqtt-gateway-istio
   namespace: test-rabbitmq
 spec:
   selector:
@@ -234,13 +234,13 @@ spec:
       name: http-service
       protocol: HTTP
     hosts:
-    - "*"
+    - "mq.koudaibook.com"
   - port:
       number: 15672
       name: http-service2
       protocol: HTTP
     hosts:
-    - "*"
+    - "mq.koudaibook.com"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -249,13 +249,26 @@ metadata:
   namespace: test-rabbitmq
 spec:
   hosts:
-  - "*"
+  - "mq.koudaibook.com"
   gateways:
-  - service-gateway
-  http: 
-  - route:
+  - mqtt-gateway-istio
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
     - destination:
         host: rabbitmq
-        port:
+        port: 
           number: 15672
+  - match:
+    - uri:
+        exact: /ws
+    - uri:
+        exact: /wss
+    route:
+    - destination:
+        host: rabbitmq
+        port: 
+          number: 15675
     
