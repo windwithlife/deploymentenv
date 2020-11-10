@@ -223,6 +223,7 @@ apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
   name: mqserver-koudaibook-com-cert
+  namespace: test-rabbitmq
 spec:
   dnsNames:
     - mqserver.koudaibook.com
@@ -252,7 +253,7 @@ spec:
     - mqserver.koudaibook.com
     - mq.koudaibook.com
   rules: 
-  - host: mq.koudaibook.com
+  - host: mqserver.koudaibook.com
     http:
       paths: 
         #代理websocket服务
@@ -264,4 +265,7 @@ spec:
         backend:
           serviceName: rabbitmq
           servicePort: 15675
-   
+      - path: /
+        backend:
+          serviceName: rabbitmq
+          servicePort: 15672 
