@@ -219,6 +219,19 @@ spec:
               path: enabled_plugins
 
 ---
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: mqserver-koudaibook-com-cert
+spec:
+  dnsNames:
+    - mqserver.koudaibook.com
+    - mq.koudaibook.com
+  secretName: mqserver-koudaibook-com-cert
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+---
 
 apiVersion: extensions/v1beta1     
 kind: Ingress    
@@ -233,12 +246,21 @@ metadata:
        proxy_set_header Upgrade "websocket";
        proxy_set_header Connection "Upgrade";
 spec:      
+  tls:
+  - secretName: mqserver-koudaibook-com-cert
+    hosts:
+    - mqserver.koudaibook.com
+    - mq.koudaibook.com
   rules: 
   - host: mq.koudaibook.com
     http:
       paths: 
         #代理websocket服务
       - path: /ws
+        backend:
+          serviceName: rabbitmq
+          servicePort: 15675
+      - path: /wss
         backend:
           serviceName: rabbitmq
           servicePort: 15675
