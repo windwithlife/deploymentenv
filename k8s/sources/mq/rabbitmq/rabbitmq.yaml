@@ -101,7 +101,7 @@ spec:
      port: 15675
      targetPort: 15675
      nodePort: 30075
-   - name:mqtt-web-ssl
+   - name: mqtt-web-ssl
      protocol: TCP
      port: 15676
      targetPort: 15676
