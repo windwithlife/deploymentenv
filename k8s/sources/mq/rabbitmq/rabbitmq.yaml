@@ -155,6 +155,9 @@ spec:
           - name: web-mqtt
             protocol: TCP
             containerPort: 15675
+          - name: web-mqtt-ssl
+            protocol: TCP
+            containerPort: 15676
 
         livenessProbe:
           exec:
