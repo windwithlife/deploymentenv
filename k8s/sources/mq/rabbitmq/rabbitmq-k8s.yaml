@@ -241,7 +241,9 @@ metadata:
   namespace: test-rabbitmq
   annotations:           
     #不启用https强制跳转
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+    # nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.org/websocket-services: "rabbitmq"
     #ingress使用那种软件 
     kubernetes.io/ingress.class: nginx
     #配置websocket 需要的配置   
@@ -266,7 +268,7 @@ spec:
       - path: /wss
         backend:
           serviceName: rabbitmq
-          servicePort: 15675
+          servicePort: 15676
       - path: /
         backend:
           serviceName: rabbitmq
