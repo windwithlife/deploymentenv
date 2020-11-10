@@ -285,7 +285,7 @@ spec:
       - path: /wss
         backend:
           serviceName: rabbitmq
-          servicePort: 15675
+          servicePort: 15676
       - path: /
         backend:
           serviceName: rabbitmq
