@@ -13,22 +13,35 @@ spec:
     name: mysql
   clusterIP: None
 ---
-# Client service for connecting to any MySQL instance for reads.
-# For writes, you must instead connect to the primary: mysql-0.mysql.
 
-  Version: v1
+apiVersion: v1
 kind: Service
 metadata:
-  name: mysql-svc-read
+  name: mysql-read
   labels:
     app: mysql
 spec:
   ports:
   - name: mysql
     port: 3306
-  selector:
-    app: mysqlports:
-  - name: mysql
-    port: 3306
+    targetPort: 3306
+    nodePort: 30007
   selector:
     app: mysql
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-readwrite
+  labels:
+    app: mysql
+spec:
+  ports:
+  -  name: mysql
+     port: 3306
+     targetPort: 3306
+     nodePort: 30006
+  selector:
+    statefulset.kubernetes.io/pod-name: mysql-ss-0
+  type: NodePort 

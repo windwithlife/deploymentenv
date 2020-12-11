@@ -112,30 +112,38 @@ spec:
           set -ex
           # 确定binlog 克隆数据位置(如果binlog存在的话).
           cd /var/lib/mysql
+          echo  "enter the xtrabackup"
           # 如果存在该文件，则该xrabackup是从现有的从节点克隆出来的。
           if [[ -s xtrabackup_slave_info ]]; then
-            mv xtrabackup_slave_info change_master_to.sql.in
-            rm -f xtrabackup_binlog_info
-          elif [[ -f xtrabackup_binlog_info ]]; then         
+            echo "slave_info is existed"
+            #mv xtrabackup_slave_info change_master_to.sql.in
+            cat xtrabackup_slave_info | sed -E 's/;$//g' > change_master_to.sql.in
+            rm -f xtrabackup_slave_info xtrabackup_binlog_info
+            #rm -f xtrabackup_binlog_info
+          elif [[ -f xtrabackup_binlog_info ]]; then
+            echo "binglog_info is existed"         
             [[ `cat xtrabackup_binlog_info` =~ ^(.*?)[[:space:]]+(.*?)$ ]] || exit 1
             rm xtrabackup_binlog_info
             echo "CHANGE MASTER TO MASTER_LOG_FILE='${BASH_REMATCH[1]}',\
                   MASTER_LOG_POS=${BASH_REMATCH[2]}" > change_master_to.sql.in
           fi     
+          echo "test"
           if [[ -f change_master_to.sql.in ]]; then
             echo "Waiting for mysqld to be ready (accepting connections)"
             until mysql -h 127.0.0.1 -e "SELECT 1"; do sleep 1; done
             echo "Initializing replication from clone position"
-            mv change_master_to.sql.in change_master_to.sql.orig
-            mysql -h 127.0.0.1 <<EOF
-          $(<change_master_to.sql.orig),
+            mysql -h 127.0.0.1 -uroot << EOF
+          $(<change_master_to.sql.in),
             MASTER_HOST='mysql-ss-0.mysql-svc-master',
             MASTER_USER='root',
             MASTER_PASSWORD='',
             MASTER_CONNECT_RETRY=10;
+          STOP SLAVE;
+          RESET SLAVE;
           START SLAVE;
           EOF
           fi
+          echo "just for test"
           exec ncat --listen --keep-open --send-only --max-conns=1 3307 -c \
             "xtrabackup --backup --slave-info --stream=xbstream --host=127.0.0.1 --user=root"
         volumeMounts:
